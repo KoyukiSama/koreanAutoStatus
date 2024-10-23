@@ -55,7 +55,7 @@ struct KoreanWordList* deserialise(String FILE_PATH, struct KoreanWordList Korea
 
     // scan file
     for (int i = 0; i<WordCount; i++) {
-        fscanf(file, STRUCT_WORD_FORMAT_IN, WordList[i].count, WordList[i].status, WordList[i].word);
+        fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word);
     }
 
     fclose(file);
