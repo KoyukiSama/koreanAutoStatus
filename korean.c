@@ -122,6 +122,14 @@ int main(int argc, char *argv[]) {
     // korean CHECK
     else if ( argc == 2 && strcmp(argv[1], "check") == 0 ) { // if korean check 
 
+
+        return 0;
+    }
+
+    // korean UPDATE STATUS
+    else if ( argc == 2 && strcmp(argv[1], "updateStatus") == 0) {
+
+
         return 0;
     }
     
