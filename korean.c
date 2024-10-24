@@ -122,11 +122,12 @@ int main(int argc, char *argv[]) {
     // korean CHECK
     else if ( argc == 2 && strcmp(argv[1], "check") == 0 ) { // if korean check 
 
+        return 0;
     }
     
 
     // korean HELP
-    else if (argc == 2 && ((argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0)) {
+    else if (argc == 2 && (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h")) == 0) {
         FILE *file = fopen("./help.txt", "r");          if (file == NULL) { printf("Error, opening help file.txt (HELP section)"); return 2; }
 
         int ch ;while ( ( ch = fgetc(file)) != EOF ) {
