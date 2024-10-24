@@ -48,22 +48,24 @@ void serialize(String FILE_PATH_WORDS, struct KoreanWordList *KoreanWordList) { 
 
 struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // load objects from file
     // open file with error handling
-    FILE* file = fopen(FILE_PATH_WORDS, "r");        if (file == NULL) { free(file); perror("E,rror, opening file (deserialize function)"); return NULL; }
+    FILE* file = fopen(FILE_PATH_WORDS, "r");        if (file == NULL) { perror("E,rror, opening file (deserialize function)"); return NULL; }
 
     // malloc structs and get word count
     struct KoreanWordList *KoreanWordList = malloc(sizeof(*KoreanWordList));        if (KoreanWordList == NULL) { free(KoreanWordList); perror("Error, allocating memory for KoreanWordList struct (deserialize function)"); return NULL; }
     fscanf(file, STRUCT_WORDCOUNT_FORMAT, &(KoreanWordList->WordCount)); // load wordCount to file
     KoreanWordList->WordList = malloc(sizeof(struct Word) * (KoreanWordList->WordCount * 2 + inputSize));      if (KoreanWordList->WordList == NULL) {free(KoreanWordList->WordList); perror("E,rror allocating memory for WordList struct (deserialize function)"); return NULL;}
 
-    // set structs for easier access
-    int WordCount = KoreanWordList->WordCount;
-    struct Word* WordList = KoreanWordList->WordList;
+    if (KoreanWordList->WordCount != 0) {
+        // set structs for easier access
+        int WordCount = KoreanWordList->WordCount;
+        struct Word* WordList = KoreanWordList->WordList;
 
-    // scanf file for rest of words
-    for (int i = 0; i<WordCount; i++) {
-        fscanf(file, "[%i]", &WordList[i].size);
-        WordList[i].word = malloc(sizeof(char) * WordList[i].size + 1);         if (WordList[i].word == NULL) {free(WordList[i].word); perror("Error, allocating for string word (deserialize function)"); return NULL;}
-        fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word);
+        // scanf file for rest of words
+        for (int i = 0; i<WordCount; i++) {
+            fscanf(file, "[%i]", &WordList[i].size);
+            WordList[i].word = malloc(sizeof(char) * WordList[i].size + 1);         if (WordList[i].word == NULL) {free(WordList[i].word); perror("Error, allocating for string word (deserialize function)"); return NULL;}
+            fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word);
+        }
     }
 
     fclose(file);
@@ -74,6 +76,11 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
 int main(int argc, char *argv[]) {
     // korean ADD
     if ( strcmp(argv[1], "add") == 0 && argc > 2 ) {
+        FILE* file = fopen(FILE_PATH_WORDS, "w+");
+        if (file == NULL) {
+                fprintf(file, "0");
+        }
+        fclose(file);
 
         argv = (argv + 2); // set pointer to begin of words
         int addWordCount = argc - 2;
@@ -115,7 +122,7 @@ int main(int argc, char *argv[]) {
 
     // korean HELP
     else if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
-        FILE *file = fopen("./help.txt", "r");          if (file == NULL) { free(file), printf("Error, opening help file.txt (HELP section)"); return 2; }
+        FILE *file = fopen("./help.txt", "r");          if (file == NULL) { printf("Error, opening help file.txt (HELP section)"); return 2; }
 
         int ch ;while ( ( ch = fgetc(file)) != EOF ) {
             putchar(ch);
