@@ -76,9 +76,9 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
 int main(int argc, char *argv[]) {
     // korean ADD
     if ( strcmp(argv[1], "add") == 0 && argc > 2 ) {
-        FILE* file = fopen(FILE_PATH_WORDS, "w+");
+        FILE* file = fopen(FILE_PATH_WORDS, "r+");
         if (file == NULL) {
-                fprintf(file, "0");
+                fprintf(file, "[0]");
         }
         fclose(file);
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
                 WordList[tempWordCount].count = 1; // set count to 1
                 WordList[tempWordCount].status = 'U'; // set status to unknown
                 WordList[tempWordCount].size = strlen(argv[i]); // set size to length
-                WordList[tempWordCount].word = malloc(sizeof(char) * WordList[tempWordCount].size + 1);         if (WordList[i].word == NULL) {free(WordList[tempWordCount].word); perror("Error allocating for string word in add section"); return 1;}
+                WordList[tempWordCount].word = malloc(sizeof(char) * WordList[tempWordCount].size + 1);         if (WordList[tempWordCount].word == NULL) {free(WordList[tempWordCount].word); perror("Error allocating for string word in add section"); return 1;}
                 strcpy(WordList[tempWordCount].word, argv[i]); // set word to current add word
 
                 tempWordCount++; // increment word count to account for new word
@@ -128,7 +128,6 @@ int main(int argc, char *argv[]) {
             putchar(ch);
         }
 
-        printf("help File written!");
         fclose(file);
         return 0;
     }
