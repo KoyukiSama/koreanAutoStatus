@@ -1,0 +1,14 @@
+./korean add (words) , make sure to add a space between each word, otherwise it won't parse it properly
+example: ./korean add 몰다 어디다 밤 고양 탕싱
+
+the add will create a file and store the words inside of it, then if it encounters a word again it will take notice and increment your notice count.
+
+
+./korean check
+
+the check will display all words you should either put on known or on seen.
+
+
+./korean -h or --help
+
+-h cats this txt file
