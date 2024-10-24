@@ -78,9 +78,14 @@ int main(int argc, char *argv[]) {
     if ( strcmp(argv[1], "add") == 0 && argc > 2 ) {
         FILE* file = fopen(FILE_PATH_WORDS, "r+");
         if (file == NULL) {
-                fprintf(file, "[0]");
-        }
-        fclose(file);
+            file = fopen(FILE_PATH_WORDS, "w");
+            if (file == NULL) {
+                perror("Error, creating file (ADD section)");
+            }
+            fprintf(file, "[0]\n");
+            fclose(file);
+        } 
+        else { fclose(file); }
 
         argv = (argv + 2); // set pointer to begin of words
         int addWordCount = argc - 2;
