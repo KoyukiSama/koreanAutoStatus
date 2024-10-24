@@ -86,8 +86,8 @@ int main(int argc, char *argv[]) {
             for (int j = 0; j<tempWordCount; j++) {
                 if (strcmp(WordList[j].word, argv[i]) == 0) { // if word is found
                     WordList[j].count++;
-                    j = tempWordCount;
                     wordFound = 1;
+                    break;
                 }
             }
             if (wordFound == 0) { // if not found, add it
