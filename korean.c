@@ -53,7 +53,7 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
     // malloc structs and get word count
     struct KoreanWordList *KoreanWordList = malloc(sizeof(*KoreanWordList));        if (KoreanWordList == NULL) { free(KoreanWordList); perror("Error allocating memory for KoreanWordList struct"); return NULL; }
     fscanf(file, STRUCT_WORDCOUNT_FORMAT, &(KoreanWordList->WordCount)); // load wordCount to file
-    KoreanWordList->WordList = malloc(sizeof(struct Word) * (KoreanWordList->WordCount * 2) + inputSize);      if (KoreanWordList->WordList == NULL) {free(KoreanWordList->WordList); perror("Error allocating memory for WordList struct"); return NULL;}
+    KoreanWordList->WordList = malloc(sizeof(struct Word) * (KoreanWordList->WordCount * 2 + inputSize));      if (KoreanWordList->WordList == NULL) {free(KoreanWordList->WordList); perror("Error allocating memory for WordList struct"); return NULL;}
 
     // set structs for easier access
     int WordCount = KoreanWordList->WordCount;
