@@ -3,7 +3,7 @@
 #include <string.h>
 
 typedef char* String; // create String data type
-const char* STRUCT_WORDCOUNT_FORMAT = "[%i]";
+const char* STRUCT_WORDCOUNT_FORMAT = "{%i}\n";
 const char* STRUCT_WORD_FORMAT_IN = "(%i, %c, %[^,],)\n";
 const char* STRUCT_WORD_FORMAT_OUT = "[%i](%i, %c, %s,)\n";
 
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
             if (file == NULL) {
                 perror("Error, creating file (ADD section)");
             }
-            fprintf(file, "[0]\n");
+            fprintf(file, "{0}\n");
             fclose(file);
         } 
         else { fclose(file); }
