@@ -75,7 +75,7 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
 
 int main(int argc, char *argv[]) {
     // korean ADD
-    if ( strcmp(argv[1], "add") == 0 && argc > 2 ) {
+    if ( argc > 2 && strcmp(argv[1], "add") == 0 ) {
         FILE* file = fopen(FILE_PATH_WORDS, "r+");
         if (file == NULL) {
             file = fopen(FILE_PATH_WORDS, "w");
@@ -120,13 +120,13 @@ int main(int argc, char *argv[]) {
     }
 
     // korean CHECK
-    else if (strcmp(argv[1], "check") == 0 && argc == 2) { // if korean check 
+    else if ( argc == 2 && strcmp(argv[1], "check") == 0 ) { // if korean check 
 
     }
     
 
     // korean HELP
-    else if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
+    else if (argc == 2 && (argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
         FILE *file = fopen("./help.txt", "r");          if (file == NULL) { printf("Error, opening help file.txt (HELP section)"); return 2; }
 
         int ch ;while ( ( ch = fgetc(file)) != EOF ) {
