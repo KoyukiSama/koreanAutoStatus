@@ -88,8 +88,7 @@ int main(int argc, char *argv[]) {
                     WordList[j].count++;
                     j = tempWordCount;
                     wordFound = 1;
-                } 
-                j++;
+                }
             }
             if (wordFound == 0) { // if not found, add it
                 WordList[tempWordCount].count = 0; // set count to 0
@@ -100,7 +99,6 @@ int main(int argc, char *argv[]) {
                 tempWordCount++; // increment word count to account for new word
             }
             wordFound = 0;
-            i++;
         }
         KoreanWordList->WordCount = tempWordCount;
         serialize(FILE_PATH_WORDS, KoreanWordList);
