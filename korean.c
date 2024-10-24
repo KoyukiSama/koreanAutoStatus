@@ -2,8 +2,8 @@
 
 typedef char* String; // create String data type
 const char* STRUCT_WORDCOUNT_FORMAT = "[%i]";
-const char* STRUCT_WORD_FORMAT_IN = "(%i, %c, %50[^,])";
-const char* STRUCT_WORD_FORMAT_OUT = "(%i, %c, %s)\n";
+const char* STRUCT_WORD_FORMAT_IN = "(%i, %c, %[^,],)";
+const char* STRUCT_WORD_FORMAT_OUT = "(%i, %c, %s,)\n";
 
 
 // SETTINGS -------------------------------------------------------------------!
@@ -13,6 +13,7 @@ const String FILE_PATH_WORDS = "/home/katarina/repos/KimchiReader-Auto-Status/wo
 const String FILE_PATH_WORDCOUNT = "/home/katarina/repos/KimchiReader-Auto-Status/wordcount.dat";
 // SETTINGS -------------------------------------------------------------------!
 
+// TODO count user input to make space for serialisation
 
 struct KoreanWordList {
     int WordCount;
@@ -27,8 +28,7 @@ struct Word {
 
 void serialize(String FILE_PATH_WORDS, struct KoreanWordList KoreanWordList) { // save to file
     // open file with error handling
-    FILE* file = fopen(FILE_PATH_WORDS, "w+");
-    if (file == NULL) { perror("Error opening file"); return; }
+    FILE* file = fopen(FILE_PATH_WORDS, "w");      if (file == NULL) { perror("Error opening file"); return; }
 
     // set structs for easier access
     int WordCount = KoreanWordList.WordCount; // set count
@@ -43,20 +43,29 @@ void serialize(String FILE_PATH_WORDS, struct KoreanWordList KoreanWordList) { /
     fclose(file);
 }
 
-struct KoreanWordList* deserialise(String FILE_PATH) { // load objects from file
+struct KoreanWordList* deserialise(String FILE_PATH, int inputSize) { // load objects from file
     // open file with error handling
-    FILE* file = fopen(FILE_PATH, "w+");
-    if (file == NULL) { perror("Error opening file"); return; }
+    FILE* file = fopen(FILE_PATH, "r");        if (file == NULL) { perror("Error opening file"); return; }
 
-    // malloc struct
+    // malloc structs and get word count
+    struct KoreanWordList *KoreanWordList = malloc(sizeof(*KoreanWordList));        if (KoreanWordList == NULL) { perror("Error allocating memory for KoreanWordList struct"); return; }
+    fscanf(file, STRUCT_WORDCOUNT_FORMAT, &(KoreanWordList->WordCount)); // load wordCount to file
+    KoreanWordList->WordList = malloc(sizeof(struct Word) * (KoreanWordList->WordCount * 2) + inputSize + 50);      if (KoreanWordList->WordList == NULL) {perror("Error allocating memory for WordList struct"); return;}   // the 50 is just to be sure
 
-    // scan file
-    fprintf(file, STRUCT_WORDCOUNT_FORMAT, WordCount); // load wordCount to file
+    // set structs for easier access
+    int WordCount = KoreanWordList->WordCount;
+    struct Word* WordList = KoreanWordList->WordList;
+
+    // scanf file for rest of words
     for (int i = 0; i<WordCount; i++) {
-        fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word, WordList[i].length);
+        WordList[i].word = malloc(sizeof(char) * WordList[i].length + 1); if (WordList[i].word == NULL) {perror("Error allocating for string word"); return;}
+        WordList[i].word[WordList->length] = '\0';
+        fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word);
     }
 
     fclose(file);
+
+    return KoreanWordList;
 }
 
 int main(int argc, char *argv[]) {
