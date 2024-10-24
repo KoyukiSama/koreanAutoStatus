@@ -10,6 +10,12 @@ the add will create a file and store the words inside of it, then if it encounte
 the check will display all words you should either put on known or on seen.
 
 ---
+./korean updateStatus
+
+the updateStatus will update all words to sync with your korean immersion tool, kimchi reader (for example).
+!!!only use this when you have actually put the words from the korean check on seen or known that it has told you to put on seen or known!!!
+
+---
 ./korean -h or --help
 
 -h cats this txt file
