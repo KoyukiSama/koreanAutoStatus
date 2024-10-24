@@ -1,9 +1,10 @@
 #include <stdio.h>;
+#include <stdlib.h>;
 
 typedef char* String; // create String data type
 const char* STRUCT_WORDCOUNT_FORMAT = "[%i]";
-const char* STRUCT_WORD_FORMAT_IN = "(%i, %c, %[^,],)";
-const char* STRUCT_WORD_FORMAT_OUT = "(%i, %c, %s,)\n";
+const char* STRUCT_WORD_FORMAT_IN = "(%i, %c, %[^,],)\n";
+const char* STRUCT_WORD_FORMAT_OUT = "[%i](%i, %c, %s,)\n";
 
 
 // SETTINGS -------------------------------------------------------------------!
@@ -37,7 +38,7 @@ void serialize(String FILE_PATH_WORDS, struct KoreanWordList KoreanWordList) { /
     // print structs to file
     fprintf(file, STRUCT_WORDCOUNT_FORMAT, WordCount); // print wordCount to file
     for(int i = 0; i<WordCount; i++) { // print struct Word to file
-        fprintf(file, STRUCT_WORD_FORMAT_OUT, WordList[i].count, WordList[i].status, WordList[i].word);
+        fprintf(file, STRUCT_WORD_FORMAT_OUT, WordList[i].length, WordList[i].count, WordList[i].status, WordList[i].word);
     }
 
     fclose(file);
@@ -58,8 +59,8 @@ struct KoreanWordList* deserialise(String FILE_PATH, int inputSize) { // load ob
 
     // scanf file for rest of words
     for (int i = 0; i<WordCount; i++) {
+        fscanf(file, "[%i]", &WordList[i].length);
         WordList[i].word = malloc(sizeof(char) * WordList[i].length + 1); if (WordList[i].word == NULL) {perror("Error allocating for string word"); return;}
-        WordList[i].word[WordList->length] = '\0';
         fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word);
     }
 
