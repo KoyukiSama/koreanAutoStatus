@@ -23,7 +23,7 @@ struct KoreanWordList {
 struct Word {
     int count;
     char status; // U, S, K respectively unknown, seen, known, these are to indicate if the person has the following words on seen or on known
-    int length;
+    int size;
     String word;
 };
 
@@ -38,7 +38,7 @@ void serialize(String FILE_PATH_WORDS, struct KoreanWordList KoreanWordList) { /
     // print structs to file
     fprintf(file, STRUCT_WORDCOUNT_FORMAT, WordCount); // print wordCount to file
     for(int i = 0; i<WordCount; i++) { // print struct Word to file
-        fprintf(file, STRUCT_WORD_FORMAT_OUT, WordList[i].length, WordList[i].count, WordList[i].status, WordList[i].word);
+        fprintf(file, STRUCT_WORD_FORMAT_OUT, WordList[i].size, WordList[i].count, WordList[i].status, WordList[i].word);
     }
 
     fclose(file);
@@ -59,8 +59,8 @@ struct KoreanWordList* deserialise(String FILE_PATH, int inputSize) { // load ob
 
     // scanf file for rest of words
     for (int i = 0; i<WordCount; i++) {
-        fscanf(file, "[%i]", &WordList[i].length);
-        WordList[i].word = malloc(sizeof(char) * WordList[i].length + 1); if (WordList[i].word == NULL) {perror("Error allocating for string word"); return;}
+        fscanf(file, "[%i]", &WordList[i].size);
+        WordList[i].word = malloc(sizeof(char) * WordList[i].size + 1); if (WordList[i].word == NULL) {perror("Error allocating for string word"); return;}
         fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word);
     }
 
