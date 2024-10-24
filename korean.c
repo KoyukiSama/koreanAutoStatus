@@ -62,7 +62,7 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
     // scanf file for rest of words
     for (int i = 0; i<WordCount; i++) {
         fscanf(file, "[%i]", &WordList[i].size);
-        WordList[i].word = malloc(sizeof(char) * WordList[i].size + 1); if (WordList[i].word == NULL) {free(WordList[i].word); perror("Error allocating for string word"); return NULL;}
+        WordList[i].word = malloc(sizeof(char) * WordList[i].size + 1);         if (WordList[i].word == NULL) {free(WordList[i].word); perror("Error allocating for string word"); return NULL;}
         fscanf(file, STRUCT_WORD_FORMAT_IN, &WordList[i].count, &WordList[i].status, WordList[i].word);
     }
 
@@ -91,9 +91,10 @@ int main(int argc, char *argv[]) {
                 }
             }
             if (wordFound == 0) { // if not found, add it
-                WordList[tempWordCount].count = 0; // set count to 0
+                WordList[tempWordCount].count = 1; // set count to 1
                 WordList[tempWordCount].status = 'U'; // set status to unknown
                 WordList[tempWordCount].size = strlen(argv[i]); // set size to length
+                WordList[tempWordCount].word = malloc(sizeof(char) * WordList[tempWordCount].size + 1);         if (WordList[i].word == NULL) {free(WordList[tempWordCount].word); perror("Error allocating for string word in add section"); return NULL;}
                 strcpy(WordList[tempWordCount].word, argv[i]); // set word to current add word
 
                 tempWordCount++; // increment word count to account for new word
@@ -102,7 +103,8 @@ int main(int argc, char *argv[]) {
         }
         KoreanWordList->WordCount = tempWordCount;
         serialize(FILE_PATH_WORDS, KoreanWordList);
-        free(KoreanWordList);
+        
+        return 0;
     }
 
     // korean CHECK
@@ -115,7 +117,7 @@ int main(int argc, char *argv[]) {
     else if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
         FILE *file = fopen("./help.txt", "r");          if (file == NULL) { printf("Error opening help file.txt"); return 2; }
 
-        int ch ;while ( ( ch = fgetc(file)) != EOF ); {
+        int ch ;while ( ( ch = fgetc(file)) != EOF ) {
             putchar(ch);
         }
 
