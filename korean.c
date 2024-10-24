@@ -73,6 +73,20 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
     return KoreanWordList;
 }
 
+void checkCreateFile(String FILE_PATH_WORDS) {
+    FILE* file = fopen(FILE_PATH_WORDS, "r+");
+    if (file == NULL) {
+        file = fopen(FILE_PATH_WORDS, "w");
+        if (file == NULL) {
+            perror("Error, creating file (ADD section)");
+        }
+        fprintf(file, "{0}\n");
+        fclose(file);
+    } 
+    else { fclose(file); }
+}
+        
+
 int main(int argc, char *argv[]) {
     // korean ADD
     if ( argc > 2 && strcmp(argv[1], "add" ) == 0 ) {
