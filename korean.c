@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
                 WordList[tempWordCount].count = 1; // set count to 1
                 WordList[tempWordCount].status = 'U'; // set status to unknown
                 WordList[tempWordCount].size = strlen(argv[i]); // set size to length
-                WordList[tempWordCount].word = malloc(sizeof(char) * WordList[tempWordCount].size + 1);         if (WordList[i].word == NULL) {free(WordList[tempWordCount].word); perror("Error allocating for string word in add section"); return NULL;}
+                WordList[tempWordCount].word = malloc(sizeof(char) * WordList[tempWordCount].size + 1);         if (WordList[i].word == NULL) {free(WordList[tempWordCount].word); perror("Error allocating for string word in add section"); return 1;}
                 strcpy(WordList[tempWordCount].word, argv[i]); // set word to current add word
 
                 tempWordCount++; // increment word count to account for new word
