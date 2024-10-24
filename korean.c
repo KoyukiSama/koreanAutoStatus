@@ -1,5 +1,6 @@
 #include <stdio.h>;
 #include <stdlib.h>;
+#include <string.h>;
 
 typedef char* String; // create String data type
 const char* STRUCT_WORDCOUNT_FORMAT = "[%i]";
@@ -9,9 +10,8 @@ const char* STRUCT_WORD_FORMAT_OUT = "[%i](%i, %c, %s,)\n";
 
 // SETTINGS -------------------------------------------------------------------!
 // in quotes, put path-to-file of words
-// "/home/(name)/KimchiReader-Auto-Status/words.dat"
-const String FILE_PATH_WORDS = "/home/katarina/repos/KimchiReader-Auto-Status/words.dat";
-const String FILE_PATH_WORDCOUNT = "/home/katarina/repos/KimchiReader-Auto-Status/wordcount.dat";
+// "./words.dat" , . means it's in the current directory
+const String FILE_PATH_WORDS = "./words.dat";
 // SETTINGS -------------------------------------------------------------------!
 
 // TODO count user input to make space for serialisation
@@ -27,13 +27,13 @@ struct Word {
     String word;
 };
 
-void serialize(String FILE_PATH_WORDS, struct KoreanWordList KoreanWordList) { // save to file
+void serialize(String FILE_PATH_WORDS, struct KoreanWordList *KoreanWordList) { // save to file
     // open file with error handling
     FILE* file = fopen(FILE_PATH_WORDS, "w");      if (file == NULL) { perror("Error opening file"); return; }
 
     // set structs for easier access
-    int WordCount = KoreanWordList.WordCount; // set count
-    struct Word* WordList = KoreanWordList.WordList;
+    int WordCount = KoreanWordList->WordCount; // set count
+    struct Word* WordList = KoreanWordList->WordList;
 
     // print structs to file
     fprintf(file, STRUCT_WORDCOUNT_FORMAT, WordCount); // print wordCount to file
@@ -44,14 +44,14 @@ void serialize(String FILE_PATH_WORDS, struct KoreanWordList KoreanWordList) { /
     fclose(file);
 }
 
-struct KoreanWordList* deserialise(String FILE_PATH, int inputSize) { // load objects from file
+struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // load objects from file
     // open file with error handling
-    FILE* file = fopen(FILE_PATH, "r");        if (file == NULL) { perror("Error opening file"); return; }
+    FILE* file = fopen(FILE_PATH_WORDS, "r");        if (file == NULL) { perror("Error opening file"); return; }
 
     // malloc structs and get word count
     struct KoreanWordList *KoreanWordList = malloc(sizeof(*KoreanWordList));        if (KoreanWordList == NULL) { perror("Error allocating memory for KoreanWordList struct"); return; }
     fscanf(file, STRUCT_WORDCOUNT_FORMAT, &(KoreanWordList->WordCount)); // load wordCount to file
-    KoreanWordList->WordList = malloc(sizeof(struct Word) * (KoreanWordList->WordCount * 2) + inputSize + 50);      if (KoreanWordList->WordList == NULL) {perror("Error allocating memory for WordList struct"); return;}   // the 50 is just to be sure
+    KoreanWordList->WordList = malloc(sizeof(struct Word) * (KoreanWordList->WordCount * 2) + inputSize);      if (KoreanWordList->WordList == NULL) {perror("Error allocating memory for WordList struct"); return;}
 
     // set structs for easier access
     int WordCount = KoreanWordList->WordCount;
@@ -70,5 +70,58 @@ struct KoreanWordList* deserialise(String FILE_PATH, int inputSize) { // load ob
 }
 
 int main(int argc, char *argv[]) {
+    // korean ADD
+    if ( strcmp(argv[1], "add") == 0 && argc > 2 ) {
 
+        (argv + 2); // set pointer to begin of words
+        int addWordCount = argc - 2;
+        struct KoreanWordList* KoreanWordList = deserialise(FILE_PATH_WORDS, addWordCount);
+        int tempWordCount = KoreanWordList->WordCount;
+        struct Word* WordList = KoreanWordList->WordList;
+
+        for (int i = 0; i<addWordCount; i++) {
+            for (int j = 0; j<tempWordCount; j++) {
+                if (strcmp(WordList[j].word, argv[i]) == 0) { // if word is found
+                    WordList[j].count++;
+                } 
+                else { // if not found, add it
+                    WordList[tempWordCount].count = 0; // set count to 0
+                    WordList[tempWordCount].status = 'U'; // set status to unknown
+                    WordList[tempWordCount].size = strlen(argv[i]); // set size to length
+                    strcpy(WordList[tempWordCount].word, argv[i]); // set word to current add word
+
+                    tempWordCount++; // increment word count to account for new word
+                }
+                i++;
+            }
+        }
+        KoreanWordList->WordCount = tempWordCount;
+        serialize(FILE_PATH_WORDS, KoreanWordList);
+    }
+
+    // korean CHECK
+    else if (strcmp(argv[1], "check") == 0 && argc == 2) { // if korean check 
+
+    }
+    
+
+    // korean HELP
+    else if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
+        FILE *file = fopen("./help.txt", "r");          if (file == NULL) { printf("Error opening help file.txt"); return 2; }
+
+        int ch ;while ( ( ch = fgetc(file)) != EOF ); {
+            putchar(ch);
+        }
+
+        printf("help File written!");
+        fclose(file);
+        return 0;
+    }
+
+    // korean ERROR
+    else { // if any random word
+        printf("Error? try, korean -h or korean --help");
+        return 1;
+    }
+    
 }
