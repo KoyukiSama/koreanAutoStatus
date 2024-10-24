@@ -39,8 +39,10 @@ void serialize(String FILE_PATH_WORDS, struct KoreanWordList *KoreanWordList) { 
     fprintf(file, STRUCT_WORDCOUNT_FORMAT, WordCount); // print wordCount to file
     for(int i = 0; i<WordCount; i++) { // print struct Word to file
         fprintf(file, STRUCT_WORD_FORMAT_OUT, WordList[i].size, WordList[i].count, WordList[i].status, WordList[i].word);
+        free(WordList[i].word);
     }
-
+    free(WordList);
+    free(KoreanWordList);
     fclose(file);
 }
 
@@ -73,30 +75,36 @@ int main(int argc, char *argv[]) {
     // korean ADD
     if ( strcmp(argv[1], "add") == 0 && argc > 2 ) {
 
-        (argv + 2); // set pointer to begin of words
+        argv = (argv + 2); // set pointer to begin of words
         int addWordCount = argc - 2;
         struct KoreanWordList* KoreanWordList = deserialise(FILE_PATH_WORDS, addWordCount);
         int tempWordCount = KoreanWordList->WordCount;
         struct Word* WordList = KoreanWordList->WordList;
+        char wordFound = 0;
 
         for (int i = 0; i<addWordCount; i++) {
             for (int j = 0; j<tempWordCount; j++) {
                 if (strcmp(WordList[j].word, argv[i]) == 0) { // if word is found
                     WordList[j].count++;
+                    j = tempWordCount;
+                    wordFound = 1;
                 } 
-                else { // if not found, add it
-                    WordList[tempWordCount].count = 0; // set count to 0
-                    WordList[tempWordCount].status = 'U'; // set status to unknown
-                    WordList[tempWordCount].size = strlen(argv[i]); // set size to length
-                    strcpy(WordList[tempWordCount].word, argv[i]); // set word to current add word
-
-                    tempWordCount++; // increment word count to account for new word
-                }
-                i++;
+                j++;
             }
+            if (wordFound == 0) { // if not found, add it
+                WordList[tempWordCount].count = 0; // set count to 0
+                WordList[tempWordCount].status = 'U'; // set status to unknown
+                WordList[tempWordCount].size = strlen(argv[i]); // set size to length
+                strcpy(WordList[tempWordCount].word, argv[i]); // set word to current add word
+
+                tempWordCount++; // increment word count to account for new word
+            }
+            wordFound = 0;
+            i++;
         }
         KoreanWordList->WordCount = tempWordCount;
         serialize(FILE_PATH_WORDS, KoreanWordList);
+        free(KoreanWordList);
     }
 
     // korean CHECK
