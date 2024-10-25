@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
     else if ( argc == 2 && strcmp(argv[1], "check") == 0 ) { // if korean check 
         checkCreateFile(FILE_PATH_WORDS);
 
-        struct KoreanWordList* KoreanWordList = deserialise(FILE_PATH_WORDS, 0);         if (KoreanWordList == NULL) { perror("Error, deserializing in (ADD section)"); return 1; }
+        struct KoreanWordList* KoreanWordList = deserialise(FILE_PATH_WORDS, 0);         if (KoreanWordList == NULL) { perror("Error, deserializing in (CHECK section)"); return 1; }
         int WordCount = KoreanWordList->WordCount;
         struct Word* WordList = KoreanWordList->WordList;
 
