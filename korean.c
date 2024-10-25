@@ -202,8 +202,9 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        serialize(FILE_PATH_WORDS, KoreanWordList);
         freeKoreanWordList(KoreanWordList);
-        printf("successfuly updated status!");
+        printf("successfully updated status!");
         return 0;
     }
     
