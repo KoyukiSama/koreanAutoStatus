@@ -73,6 +73,20 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
     return KoreanWordList;
 }
 
+void freeKoreanWordList(struct KoreanWordList* KoreanWordList) {
+
+    int WordCount = KoreanWordList->WordCount;
+    struct Word* WordList = KoreanWordList->WordList;
+    
+    for (int i = 0; i < WordCount; i++) {
+        free(WordList[i].word);
+    }
+    free(WordList);
+    free(KoreanWordList);
+    
+    return;
+}
+
 void checkCreateFile(String FILE_PATH_WORDS) {
     FILE* file = fopen(FILE_PATH_WORDS, "r+");
     if (file == NULL) {
@@ -90,16 +104,7 @@ void checkCreateFile(String FILE_PATH_WORDS) {
 int main(int argc, char *argv[]) {
     // korean ADD
     if ( argc > 2 && strcmp(argv[1], "add" ) == 0 ) {
-        FILE* file = fopen(FILE_PATH_WORDS, "r+");
-        if (file == NULL) {
-            file = fopen(FILE_PATH_WORDS, "w");
-            if (file == NULL) {
-                perror("Error, creating file (ADD section)");
-            }
-            fprintf(file, "{0}\n");
-            fclose(file);
-        } 
-        else { fclose(file); }
+        checkCreateFile(FILE_PATH_WORDS);
 
         argv = (argv + 2); // set pointer to begin of words
         int addWordCount = argc - 2;
@@ -135,6 +140,9 @@ int main(int argc, char *argv[]) {
 
     // korean CHECK
     else if ( argc == 2 && strcmp(argv[1], "check") == 0 ) { // if korean check 
+        checkCreateFile(FILE_PATH_WORDS);
+
+        struct KoreanWordList* KoreanWordList = deserialise(FILE_PATH_WORDS, 0);         if (KoreanWordList == NULL) { perror("Error, deserializing in (ADD section)"); return 1; }
 
 
         return 0;
@@ -142,7 +150,7 @@ int main(int argc, char *argv[]) {
 
     // korean UPDATE STATUS
     else if ( argc == 2 && strcmp(argv[1], "updateStatus") == 0) {
-
+        checkCreateFile(FILE_PATH_WORDS);
 
         return 0;
     }
