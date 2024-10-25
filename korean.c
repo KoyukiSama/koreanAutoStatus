@@ -136,6 +136,9 @@ int main(int argc, char *argv[]) {
         }
         KoreanWordList->WordCount = tempWordCount;
         serialize(FILE_PATH_WORDS, KoreanWordList);
+
+        printf("successfully added the words!\n");
+
         freeKoreanWordList(KoreanWordList);
         
         return 0;
