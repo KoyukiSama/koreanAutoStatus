@@ -7,6 +7,10 @@ const char* STRUCT_WORDCOUNT_FORMAT = "{%i}\n";
 const char* STRUCT_WORD_FORMAT_IN = "(%i, %c, %[^,],)\n";
 const char* STRUCT_WORD_FORMAT_OUT = "[%i](%i, %c, %s,)\n";
 
+#define ORANGE "\033[38;5;208m" // orange color
+#define GREEN  "\033[32m"    //  Green color
+#define RESET "\033[0m"
+
 
 // SETTINGS -------------------------------------------------------------------!
 // in quotes, put path-to-file of words
@@ -145,14 +149,14 @@ int main(int argc, char *argv[]) {
         int WordCount = KoreanWordList->WordCount;
         struct Word* WordList = KoreanWordList->WordList;
 
-        printf("\nthe words you should put on SEEN:\n\n");
+        printf("<------------------------<3---------------------------->\n\nthe words you should put on "ORANGE"SEEN"RESET":\n\n");
         char seenWords = 0;
         char knownWords = 0;
 
         // show which you should put on seen
         for (int i = 0; i < WordCount; i++) {
             if (WordList[i].count > 3 && WordList[i].count <= 8 && WordList[i].status != 'S' && WordList[i].status != 'K') {
-                printf("%s ", WordList[i].word);
+                printf(ORANGE"%s "RESET, WordList[i].word);
                 seenWords = 1;
             }
         } if (seenWords == 0) {
@@ -160,16 +164,17 @@ int main(int argc, char *argv[]) {
         }
 
         // show which you should put on known
-        printf("\n\n\n\nthe words you should put on KNOWN:\n\n");
+        printf("\n\n\nthe words you should put on "GREEN"KNOWN"RESET":\n\n");
         for (int i = 0; i < WordCount; i++) {
             if (WordList[i].count > 8 && WordList[i].status != 'K') { 
-                printf("%s ", WordList[i].word);
+                printf(GREEN"%s "RESET, WordList[i].word);
                 knownWords = 1;        
             }
         } if (knownWords == 0) {
             printf("--NO KNOWN WORDS TO ADD THIS TIME--");
         }
 
+        printf("\n\n\n<------------------------<3---------------------------->\n");
         freeKoreanWordList(KoreanWordList);
 
         return 0;
