@@ -146,16 +146,28 @@ int main(int argc, char *argv[]) {
         struct Word* WordList = KoreanWordList->WordList;
 
         printf("\nthe words you should put on SEEN:\n\n");
+        char seenWords = 0;
+        char knownWords = 0;
+
+        // show which you should put on seen
         for (int i = 0; i < WordCount; i++) {
-            if (WordList[i].count > 3 && WordList[i].count <= 8 && (WordList[i].status != 'S' || WordList[i].status != 'K')) { // show which you should put on seen
+            if (WordList[i].count > 3 && WordList[i].count <= 8 && (WordList[i].status != 'S' || WordList[i].status != 'K')) {
                 printf("%s ", WordList[i].word);
+                seenWords++;
             }
+        } if (seenWords == 0) {
+            printf("--NO SEEN WORDS TO ADD THIS TIME--");
         }
+
+        // show which you should put on known
         printf("\n\n\n\nthe words you should put on KNOWN:\n\n");
         for (int i = 0; i < WordCount; i++) {
-            if (WordList[i].count > 8 && WordList[i].status != 'K') { // show which you should put on known
-                printf("%s ", WordList[i].word);            
+            if (WordList[i].count > 8 && WordList[i].status != 'K') { 
+                printf("%s ", WordList[i].word);
+                knownWords++;        
             }
+        } if (knownWords == 0) {
+            printf("--NO KNOWN WORDS TO ADD THIS TIME--");
         }
 
         freeKoreanWordList(KoreanWordList);
