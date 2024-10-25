@@ -12,10 +12,13 @@ const char* STRUCT_WORD_FORMAT_OUT = "[%i](%i, %c, %s,)\n";
 #define RESET "\033[0m"
 
 
+
 // SETTINGS -------------------------------------------------------------------!
 // in quotes, put path-to-file of words
 // "./words.dat" , . means it's in the current directory
 const String FILE_PATH_WORDS = "./words.dat";
+const char SEENCAP = 2;
+const char KNOWNCAP = 7;
 // SETTINGS -------------------------------------------------------------------!
 
 // TODO count user input to make space for serialisation
@@ -158,7 +161,7 @@ int main(int argc, char *argv[]) {
 
         // show which you should put on seen
         for (int i = 0; i < WordCount; i++) {
-            if (WordList[i].count > 3 && WordList[i].count <= 8 && WordList[i].status != 'S' && WordList[i].status != 'K') {
+            if (WordList[i].count > SEENCAP && WordList[i].count <= KNOWNCAP && WordList[i].status != 'S' && WordList[i].status != 'K') {
                 printf(ORANGE"%s "RESET, WordList[i].word);
                 seenWords = 1;
             }
@@ -169,7 +172,7 @@ int main(int argc, char *argv[]) {
         // show which you should put on known
         printf("\n\n\nthe words you should put on "GREEN"KNOWN"RESET":\n\n");
         for (int i = 0; i < WordCount; i++) {
-            if (WordList[i].count > 8 && WordList[i].status != 'K') { 
+            if (WordList[i].count > KNOWNCAP && WordList[i].status != 'K') { 
                 printf(GREEN"%s "RESET, WordList[i].word);
                 knownWords = 1;        
             }
@@ -186,6 +189,10 @@ int main(int argc, char *argv[]) {
     // korean UPDATE STATUS
     else if ( argc == 2 && strcmp(argv[1], "updateStatus") == 0) {
         checkCreateFile(FILE_PATH_WORDS);
+
+
+
+        freeKoreanWordList(KoreanWordList);
 
         return 0;
     }
