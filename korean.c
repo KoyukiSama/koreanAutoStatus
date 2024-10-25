@@ -39,10 +39,8 @@ void serialize(String FILE_PATH_WORDS, struct KoreanWordList *KoreanWordList) { 
     fprintf(file, STRUCT_WORDCOUNT_FORMAT, WordCount); // print wordCount to file
     for(int i = 0; i<WordCount; i++) { // print struct Word to file
         fprintf(file, STRUCT_WORD_FORMAT_OUT, WordList[i].size, WordList[i].count, WordList[i].status, WordList[i].word);
-        free(WordList[i].word);
     }
-    free(WordList);
-    free(KoreanWordList);
+
     fclose(file);
 }
 
@@ -75,9 +73,9 @@ struct KoreanWordList* deserialise(String FILE_PATH_WORDS, int inputSize) { // l
 
 void freeKoreanWordList(struct KoreanWordList* KoreanWordList) {
 
-    int WordCount = KoreanWordList->WordCount;
+    int WordCount = KoreanWordList->WordCount * 2;
     struct Word* WordList = KoreanWordList->WordList;
-    
+
     for (int i = 0; i < WordCount; i++) {
         free(WordList[i].word);
     }
@@ -134,6 +132,7 @@ int main(int argc, char *argv[]) {
         }
         KoreanWordList->WordCount = tempWordCount;
         serialize(FILE_PATH_WORDS, KoreanWordList);
+        freeKoreanWordList(KoreanWordList);
         
         return 0;
     }
@@ -143,7 +142,23 @@ int main(int argc, char *argv[]) {
         checkCreateFile(FILE_PATH_WORDS);
 
         struct KoreanWordList* KoreanWordList = deserialise(FILE_PATH_WORDS, 0);         if (KoreanWordList == NULL) { perror("Error, deserializing in (ADD section)"); return 1; }
+        int WordCount = KoreanWordList->WordCount;
+        struct Word* WordList = KoreanWordList->WordList;
 
+        printf("\nthe words you should put on SEEN:\n\n");
+        for (int i = 0; i < WordCount; i++) {
+            if (WordList[i].count > 3 && WordList[i].count <= 8 && (WordList[i].status != 'S' || WordList[i].status != 'K')) { // show which you should put on seen
+                printf("%s ", WordList[i].word);
+            }
+        }
+        printf("\n\n\n\nthe words you should put on KNOWN:\n\n");
+        for (int i = 0; i < WordCount; i++) {
+            if (WordList[i].count > 8 && WordList[i].status != 'K') { // show which you should put on known
+                printf("%s ", WordList[i].word);            
+            }
+        }
+
+        freeKoreanWordList(KoreanWordList);
 
         return 0;
     }
