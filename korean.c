@@ -190,10 +190,20 @@ int main(int argc, char *argv[]) {
     else if ( argc == 2 && strcmp(argv[1], "updateStatus") == 0) {
         checkCreateFile(FILE_PATH_WORDS);
 
+        struct KoreanWordList* KoreanWordList = deserialise(FILE_PATH_WORDS, 0);         if (KoreanWordList == NULL) { perror("Error, deserializing in (CHECK section)"); return 1; }
+        int WordCount = KoreanWordList->WordCount;
+        struct Word* WordList = KoreanWordList->WordList;
 
+        for (int i = 0; i < WordCount; i++) {
+            if (WordList[i].count > SEENCAP && WordList[i].count <= KNOWNCAP && WordList[i].status != 'S' && WordList[i].status != 'K') {
+                WordList[i].status = 'S';
+            } else if (WordList[i].count > KNOWNCAP && WordList[i].status != 'K') {
+                WordList[i].status = 'K';    
+            }
+        }
 
         freeKoreanWordList(KoreanWordList);
-
+        printf("successfuly updated status!");
         return 0;
     }
     
